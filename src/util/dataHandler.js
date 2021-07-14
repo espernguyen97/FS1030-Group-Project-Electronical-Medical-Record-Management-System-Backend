@@ -41,5 +41,18 @@ const removeData = async (file, itemID) => {
     };
 };
 
-export { getAll, addData, removeData };
+const updateData = async (file, newValues, itemID) => { //newValues will be req.body
+    let content = await dataHandler.getAll(file);
+    const itemIndex = content.findIndex(item => item.id == itemID); //may need to add another function parameter if item.id varies (ex: item.email instead)
+    if (itemIndex === -1){
+        return false;
+    };
+    for (let key in newValues){
+        content[itemIndex][key] = newValues[key];
+    };
+    await write(file, content);
+    return content[itemIndex];
+};
+
+export { getAll, addData, removeData, updateData };
 

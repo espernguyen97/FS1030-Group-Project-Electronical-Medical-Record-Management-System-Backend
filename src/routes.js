@@ -19,7 +19,7 @@ const PatientsDataPath = path.resolve(process.env.PATIENT_LOCATION);
 
 const router = express.Router() ;
 
-/*As this file gets bigger we can split it into separate js files for each
+/*TODO: As this file gets bigger we can split it into separate js files for each
 section of routes (ex: usersRoutes.js, patientsRoutes.js, etc.) SW*/
   
 //1. Routes for users
@@ -91,7 +91,7 @@ router.get('/users/:id', jwtVerify, async (req, res, next) => {
     };
 });
 //1.E) route to delete a specific user when given an ID alongside a valid JWT:
-router.delete('users/:id', jwtVerify, async (req, res, next) => {
+router.delete('/users/:id', jwtVerify, async (req, res, next) => {
     try {
         let userID = req.params.id;
         let removed = await dataHandler.removeData(UsersDataPath, userID);
@@ -104,7 +104,20 @@ router.delete('users/:id', jwtVerify, async (req, res, next) => {
         return next(err);
     };
 });
-//TODO route to update a specific user when given an ID alongside a valid JWT
+//1.F) route to update a specific user when given an ID alongside a valid JWT:
+router.patch("/users/:id", jwtVerify, async (req, res, next) => {
+    try {
+        let userID = req.params.id;
+        let updated = await dataHandler.updateData(UsersDataPath, req.body, userID);
+        if (!updated){
+            return res.status(404).json({message: `entry ${userID} not found`});
+        };
+        return res.json(updated);
+    } catch (err) {
+        console.error(err);
+        return next(err);
+    };
+});
 
 
 //2. Routes for tickets
@@ -150,8 +163,7 @@ router.get('/tickets/entries/:id', jwtVerify, async (req, res, next) => {
 
 //3. Routes for patients
 //>>>3.A) route to create a new patient:
-//TODO add validation
-router.post('/patients', (req, res, next) => {
+router.post('/patients', (req, res, next) => { //TODO add validation middleware
     const newPatient = req.body      
     async () => {
         try {
@@ -201,7 +213,20 @@ router.delete('patients/:id', jwtVerify, async (req, res, next) => {
         return next(err);
     };
 });
-//TODO route to update a specific patient when given an ID alongside a valid JWT
+//3.E) route to update a specific patient when given an ID alongside a valid JWT:
+router.patch("/patients/:id", jwtVerify, async (req, res, next) => {
+    try {
+        let patientID = req.params.id;
+        let updated = await dataHandler.updateData(PatientsDataPath, req.body, patientID);
+        if (!updated){
+            return res.status(404).json({message: `entry ${patientID} not found`});
+        };
+        return res.json(updated);
+    } catch (err) {
+        console.error(err);
+        return next(err);
+    };
+});
 
 //4. TODO define routes for patient notes (create, read)
 
