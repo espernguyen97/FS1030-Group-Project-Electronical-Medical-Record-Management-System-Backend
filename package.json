@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/dduchesn/react-site"
+    "url": "https://gitlab.com/york-u-s21-fs1030-group-d-course-project/group-d-course-project-backend"
   },
   "author": "David Duchesneau-Hart,Steven David White,Chris Germishuys,Mathi Mahalingam,Nhi Nguyen,Balam",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/dduchesn/react-site/issues"
+    "url": "https://gitlab.com/york-u-s21-fs1030-group-d-course-project/group-d-course-project-backend/-/issues"
   },
-  "homepage": "https://gitlab.com/dduchesn/react-site#readme",
+  "homepage": "https://gitlab.com/york-u-s21-fs1030-group-d-course-project/group-d-course-project-backend#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
