@@ -12,6 +12,7 @@
 * JWT_SECRET= put your own JWT secret here 
 * USER_LOCATION=./data/users.json
 * TICKET_DATA_PATH=./data/tickets.json
+* PATIENT_LOCATION=./data/patients.json
   
 
   Default admin is test@test.com
