@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 //setup Data paths
 const UsersDataPath = path.resolve(process.env.USER_LOCATION);
+const TicketPostDataPath = path.resolve(process.env.TICKET_DATA_PATH);
 const router = express.Router() ;
 
   
@@ -56,6 +57,46 @@ router.post('/auth', async (req, res) => {
     });
 });
 
+
+
+//**TICKET ROUTES**//
+router.post('/tickets/entries', async (req, res, next) => {
+    const newEntry = {
+        id: uuidv4(),
+        ...req.body
+    };
+    try {
+        await dataHandler.addData(TicketPostDataPath, newEntry);
+        return res.status(201).json(newEntry);
+    } catch (err) {
+        console.error(err);
+        return next(err);
+    };
+});
+
+router.get('/tickets/entries', async (req, res, next) => {
+    try {
+        let entries = await dataHandler.getAll(TicketPostDataPath);
+        return res.json(entries);
+    } catch (err) {
+        console.error(err);
+        return next(err);
+    };
+});
+
+router.get('/tickets/entries/:id', jwtVerify, async (req, res, next) => {
+    try {
+        let entries = await dataHandler.getAll(TicketPostDataPath);
+        let entry = entries.find(entry => entry.id == req.params.id);
+        if (entry == undefined) {
+            return res.status(404).json({message: `entry ${req.params.id} not found`});
+        };
+        return res.json(entry);
+    } catch (err) {
+        console.error(err);
+        return next(err);
+    };
+});
 
 
 
