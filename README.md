@@ -18,7 +18,7 @@
   Password: 12345678
 
   
-2. Start the API App
+2. Intall the Dependancies
    ```sh
    npm install
    ```
