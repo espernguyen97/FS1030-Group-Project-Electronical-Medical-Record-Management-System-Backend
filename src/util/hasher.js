@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 
+//>>>>>Password hashing and verification:
 const createHash = async (text) => {
     try {
         const hash = await bcrypt.hash(text, 10);
@@ -17,5 +18,6 @@ const verifyHash = async (password, hash) => {
       console.error(err);
     };
 };
+//>>>>>
 
 export { createHash, verifyHash };
