@@ -25,5 +25,21 @@ const addData = async (file, data) => {
     };
 };
 
-export { getAll, addData };
+const removeData = async (file, itemID) => {
+    try {
+        let content = await getAll(file);
+        const itemIndex = content.findIndex(item => item.id == itemID); //may need to add another function parameter if item.id varies (ex: item.email instead)
+        if (itemIndex === -1) {
+            return false;
+        };
+        content.splice(itemIndex, 1);
+        await write(file, content);
+        return true;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    };
+};
+
+export { getAll, addData, removeData };
 

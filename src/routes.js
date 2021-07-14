@@ -76,7 +76,7 @@ router.get('/users', jwtVerify, async (req, res, next) => {
         return next(err);
     };
 });
-//>>>1.D) route to get a specific user when given an ID alongside a valid JWT
+//>>>1.D) route to get a specific user when given an ID alongside a valid JWT:
 router.get('/users/:id', jwtVerify, async (req, res, next) => {
     try {
         let entries = await dataHandler.getAll(UsersDataPath);
@@ -90,8 +90,20 @@ router.get('/users/:id', jwtVerify, async (req, res, next) => {
         return next(err);
     };
 });
-//TODO route to delete a specific user when given an ID alongside a valid JWT
-
+//1.E) route to delete a specific user when given an ID alongside a valid JWT:
+router.delete('users/:id', jwtVerify, async (req, res, next) => {
+    try {
+        let userID = req.params.id;
+        let removed = await dataHandler.removeData(UsersDataPath, userID);
+        if (!removed){
+            return res.status(404).json({message: `entry ${userID} not found`});
+        };
+        return res.status(204).json() // it is an empty response as this resource no longer exists
+    } catch (err) {
+        console.error(err);
+        return next(err);
+    };
+});
 //TODO route to update a specific user when given an ID alongside a valid JWT
 
 
@@ -135,6 +147,7 @@ router.get('/tickets/entries/:id', jwtVerify, async (req, res, next) => {
     };
 });
 
+
 //3. Routes for patients
 //>>>3.A) route to create a new patient:
 //TODO add validation
@@ -160,7 +173,7 @@ router.get('/patients', jwtVerify, async (req, res, next) => {
         return next(err);
     };
 });
-//>>>3.C) route to get a specific patient when given an ID alongside a valid JWT
+//>>>3.C) route to get a specific patient when given an ID alongside a valid JWT:
 router.get('/patients/:id', jwtVerify, async (req, res, next) => {
     try {
         let entries = await dataHandler.getAll(PatientsDataPath);
@@ -174,8 +187,20 @@ router.get('/patients/:id', jwtVerify, async (req, res, next) => {
         return next(err);
     };
 });
-//TODO route to delete a specific patient when given an ID alongside a valid JWT
-
+//3.D) route to delete a specific patient when given an ID alongside a valid JWT:
+router.delete('patients/:id', jwtVerify, async (req, res, next) => {
+    try {
+        let patientID = req.params.id;
+        let removed = await dataHandler.removeData(PatientsDataPath, patientID);
+        if (!removed){
+            return res.status(404).json({message: `entry ${patientID} not found`});
+        };
+        return res.status(204).json() // it is an empty response as this resource no longer exists
+    } catch (err) {
+        console.error(err);
+        return next(err);
+    };
+});
 //TODO route to update a specific patient when given an ID alongside a valid JWT
 
 //4. TODO define routes for patient notes (create, read)
