@@ -20,7 +20,11 @@
   
 2. Start the API App
    ```sh
-   npm start
+   npm install
    ```
    
+2. Start the API App
+   ```sh
+   npm start
+   ```
    
