@@ -105,7 +105,7 @@ router.delete('/users/:id', jwtVerify, async (req, res, next) => {
     };
 });
 //1.F) route to update a specific user when given an ID alongside a valid JWT:
-router.patch("/users/:id", jwtVerify, async (req, res, next) => {
+router.patch("/users/:id", jwtVerify, validateUser, async (req, res, next) => {
     try {
         let userID = req.params.id;
         let updated = await dataHandler.updateData(UsersDataPath, req.body, userID);
@@ -135,7 +135,7 @@ router.post('/tickets/entries', async (req, res, next) => {
         return next(err);
     };
 });
-//2.B) route to get a listing of all tickets
+//2.B) route to get a listing of all tickets:
 router.get('/tickets/entries', async (req, res, next) => {
     try {
         let entries = await dataHandler.getAll(TicketPostDataPath);
@@ -163,17 +163,15 @@ router.get('/tickets/entries/:id', jwtVerify, async (req, res, next) => {
 
 //3. Routes for patients
 //>>>3.A) route to create a new patient:
-router.post('/patients', (req, res, next) => { //TODO add validation middleware
+router.post('/patients', async (req, res, next) => { //TODO add validation middleware
     const newPatient = req.body      
-    async () => {
-        try {
-            await dataHandler.addData(PatientsDataPath, newPatient);
-            return res.status(201).json(newPatient);
-        } catch (err) {
-            console.error(err);
-            return next(err);
-        };
-    };    
+    try {
+        await dataHandler.addData(PatientsDataPath, newPatient);
+        return res.status(201).json(newPatient);
+    } catch (err) {
+        console.error(err);
+        return next(err);
+    };   
 });
 //>>>3.B) route to get a listing of all patients when a valid JWT is provided:
 router.get('/patients', jwtVerify, async (req, res, next) => {

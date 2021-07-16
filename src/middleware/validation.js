@@ -33,6 +33,11 @@ const checkProps = (fields, obj, msg) => {
                         msg.push(field);
                     };
                     break;
+                case "username":
+                    if (isEmpty(obj.username) || obj.username.length > 20 || obj.username.includes(" ")) {
+                        msg.push(field);
+                    };
+                    break;
                 default: //for any other required field where we just need to check if it's empty
                     if (isEmpty(obj[`${field}`])) {
                         msg.push(field);
@@ -45,7 +50,7 @@ const checkProps = (fields, obj, msg) => {
 validation function for each form to define what the required fields are and customize the error message. SW*/
 
 const validateUser = (req, res, next) => {
-    let reqFields = ["password", "email"];
+    let reqFields = ["firstName", "lastName", "jobPosition", "email", "username", "password"];
     let errMsg = {message: "validation error",
                 invalid: []};
     let arr = errMsg.invalid;
