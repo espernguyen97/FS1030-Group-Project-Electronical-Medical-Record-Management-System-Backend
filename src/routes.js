@@ -62,7 +62,7 @@ router.post('/auth', async (req, res) => {
         };
         //Upon successful login: 
         const userEmail = req.body.email;
-        const token = jwt.sign({userEmail}, process.env.JWT_SECRET, {expiresIn: "1h"});      
+        const token = jwt.sign({userEmail}, process.env.JWT_SECRET, {expiresIn: "2h"});      
         return res.json({token});
     });
 });
