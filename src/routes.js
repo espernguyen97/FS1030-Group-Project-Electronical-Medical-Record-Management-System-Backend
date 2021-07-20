@@ -16,6 +16,8 @@ import { validateUser } from './middleware/validation.js' ;
 const UsersDataPath = path.resolve(process.env.USER_LOCATION);
 const TicketPostDataPath = path.resolve(process.env.TICKET_DATA_PATH);
 const PatientsDataPath = path.resolve(process.env.PATIENT_LOCATION);
+//Database Connection path
+const db = require("./DataBase/DBconnectionPath");
 
 const router = express.Router() ;
 
@@ -68,14 +70,14 @@ router.post('/auth', async (req, res) => {
 });
 //>>>1.C) route to get a listing of all users when a valid JWT is provided:
 router.get('/users', jwtVerify, async (req, res, next) => {
-    try {
-        let entries = await dataHandler.getAll(UsersDataPath);
-        return res.json(entries);
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    };
-});
+    db.query(
+        "SELECT * FROM users",
+        function (error, results, fields) {
+          if (error) throw error;
+          return res.status(200).send(results);
+        }
+      );
+  });
 //>>>1.D) route to get a specific user when given an ID alongside a valid JWT:
 router.get('/users/:id', jwtVerify, async (req, res, next) => {
     try {
@@ -137,14 +139,14 @@ router.post('/tickets/entries', async (req, res, next) => {
 });
 //2.B) route to get a listing of all tickets:
 router.get('/tickets/entries', async (req, res, next) => {
-    try {
-        let entries = await dataHandler.getAll(TicketPostDataPath);
-        return res.json(entries);
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    };
-});
+    db.query(
+        "SELECT * FROM tickets",
+        function (error, results, fields) {
+          if (error) throw error;
+          return res.status(200).send(results);
+        }
+      );
+  });
 //2.C) route to get a specific ticket submission when given an ID alongside a valid JWT:
 router.get('/tickets/entries/:id', jwtVerify, async (req, res, next) => {
     try {
@@ -175,14 +177,14 @@ router.post('/patients', async (req, res, next) => { //TODO add validation middl
 });
 //>>>3.B) route to get a listing of all patients when a valid JWT is provided:
 router.get('/patients', jwtVerify, async (req, res, next) => {
-    try {
-        let entries = await dataHandler.getAll(PatientsDataPath);
-        return res.json(entries);
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    };
-});
+    db.query(
+        "SELECT * FROM patient",
+        function (error, results, fields) {
+          if (error) throw error;
+          return res.status(200).send(results);
+        }
+      );
+  });
 //>>>3.C) route to get a specific patient when given an ID alongside a valid JWT:
 router.get('/patients/:id', jwtVerify, async (req, res, next) => {
     try {
