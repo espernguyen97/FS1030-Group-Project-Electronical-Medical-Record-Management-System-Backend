@@ -2,6 +2,8 @@ import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
 import routes from './src/routes.js'
+import userRoutes from './src/userRoutes.js'
+import patientRoutes from './src/patientRoutes.js'
 import cors from 'cors'
 
 const port = process.env.PORT || 4000
@@ -10,6 +12,8 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/', routes)
+app.use('/', userRoutes)
+app.use('/', patientRoutes)
 
 app.use((err, req, res, next) => {
     console.error(err.stack)
