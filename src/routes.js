@@ -24,17 +24,12 @@ section of routes (ex: usersRoutes.js, patientsRoutes.js, etc.) SW*/
 //2. Routes for tickets
 //>>>2.A) route to create a new ticket:
 router.post('/tickets/entries', async (req, res, next) => {
-    const newEntry = {
-        id: uuidv4(),
-        ...req.body
-    };
-    try {
-        await dataHandler.addData(TicketPostDataPath, newEntry);
-        return res.status(201).json(newEntry);
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    };
+    db.query("INSERT INTO tickets(Username,email,Date,content) VALUES ( ?,?,?,?)",
+    [req.body.Username,req.body.email,req.body.Date,req.body.content],
+     function (error, results, fields) {
+       if (error) throw error;
+       return res.status(200).send(results);
+   });
 });
 //2.B) route to get a listing of all tickets:
 router.get('/tickets/entries', async (req, res, next) => {
