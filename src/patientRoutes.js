@@ -19,14 +19,12 @@ const router = express.Router() ;
 //3. Routes for patients
 //>>>3.A) route to create a new patient:
 router.post('/patients', async (req, res, next) => { //TODO add validation middleware
-    const newPatient = req.body      
-    try {
-        await dataHandler.addData(PatientsDataPath, newPatient);
-        return res.status(201).json(newPatient);
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    };   
+    db.query("INSERT INTO patient(DOB,OHIP,First_Name,Last_Name,Address,City,Province,PostalCode,Phone_Number,Email,Age,Last_edit) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?)",
+    [req.body.DOB,req.body.OHIP,req.body.First_Name,req.body.Last_Name,req.body.City,req.body.Address,req.body.Province,req.body.PostalCode,req.body.Phone_Number,req.body.Email,req.body.Age,req.body.Last_edit],
+     function (error, results, fields) {
+       if (error) throw error;
+       return res.status(200).send(results);
+   });
 });
 //>>>3.B) route to get a listing of all patients when a valid JWT is provided:
 router.get('/patients', jwtVerify, async (req, res, next) => {
