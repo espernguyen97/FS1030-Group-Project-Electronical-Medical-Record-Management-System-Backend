@@ -1,16 +1,13 @@
 //Dependency imports:
 import express from 'express' ;
-import path from 'path' ;
 import dotenv from 'dotenv' ;
 dotenv.config();
-import { v4 as uuidv4 } from 'uuid'; // function uuidv4() to create a random uuid
 
 //Custom module imports:
 import jwtVerify from './middleware/jwtVerify.js' ;
 import * as dataHandler from './util/dataHandler.js' ;
 
 //setup Data paths
-const PatientsDataPath = path.resolve(process.env.PATIENT_LOCATION);
 //Database Connection path
 const db = require("./DataBase/DBconnectionPath");
 
@@ -20,7 +17,20 @@ const router = express.Router() ;
 //>>>3.A) route to create a new patient:
 router.post('/patients', async (req, res, next) => { //TODO add validation middleware
     db.query("INSERT INTO patient(DOB,OHIP,First_Name,Last_Name,Address,City,Province,PostalCode,Phone_Number,Email,Age,Last_edit) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?)",
-    [req.body.DOB,req.body.OHIP,req.body.First_Name,req.body.Last_Name,req.body.City,req.body.Address,req.body.Province,req.body.PostalCode,req.body.Phone_Number,req.body.Email,req.body.Age,req.body.Last_edit],
+    [   
+        req.body.DOB,
+        req.body.OHIP,
+        req.body.First_Name,
+        req.body.Last_Name,
+        req.body.City,
+        req.body.Address,
+        req.body.Province,
+        req.body.PostalCode,
+        req.body.Phone_Number,
+        req.body.Email,
+        req.body.Age,
+        req.body.Last_edit
+    ],
      function (error, results, fields) {
        if (error) throw error;
        return res.status(200).send(results);
