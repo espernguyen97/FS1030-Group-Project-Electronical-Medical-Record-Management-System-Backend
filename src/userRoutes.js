@@ -79,19 +79,23 @@ router.get('/users', jwtVerify, async (req, res, next) => {
       );
   });
 //>>>1.D) route to get a specific user when given an ID alongside a valid JWT:
-router.get('/users/:id', jwtVerify, async (req, res, next) => {
-    try {
-        let entries = await dataHandler.getAll(UsersDataPath);
-        let entry = entries.find(entry => entry.id == req.params.id);
-        if (entry == undefined) {
-            return res.status(404).json({message: `entry ${req.params.id} not found`});
-        };
-        return res.json(entry);
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    };
-});
+// router.get('/users/:id', jwtVerify, async (req, res, next) => {
+//     try {
+//         let entries = await dataHandler.getAll(UsersDataPath);
+//         let entry = entries.find(entry => entry.id == req.params.id);
+//         if (entry == undefined) {
+//             return res.status(404).json({message: `entry ${req.params.id} not found`});
+//         };
+//         return res.json(entry);
+//     } catch (err) {
+//         console.error(err);
+//         return next(err);
+//     };
+// });
+//
+//Route 1.D conflicts with route 1.G so I commented it out for now. SW
+
+
 //1.E) route to delete a specific user when given an ID alongside a valid JWT:
 router.delete('/users/:id', jwtVerify, async (req, res, next) => {
     try {
@@ -115,6 +119,26 @@ router.patch("/users/:id", jwtVerify, validateUser, async (req, res, next) => {
             return res.status(404).json({message: `entry ${userID} not found`});
         };
         return res.json(updated);
+    } catch (err) {
+        console.error(err);
+        return next(err);
+    };
+});
+//>>>1.G) route to get a specific user by their email:
+router.get('/users/:email', jwtVerify, async (req, res, next) => {
+    const {email} = req.params;
+    try {
+        db.query(
+            `SELECT * FROM users WHERE Email='${email}'`,
+            function (error, results, fields){
+                if (error) throw error;
+                const user = results[0];
+                if (!user) {
+                    return res.status(404).json({message: `user not found`});
+                };
+                return res.json(user);
+            }
+        );       
     } catch (err) {
         console.error(err);
         return next(err);
