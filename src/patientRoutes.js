@@ -82,7 +82,7 @@ router.patch("/patients/:id", jwtVerify, async (req, res, next) => {
     Phone_Number = "${Phone_Number}",
     Email = "${Email}" 
     WHERE
-    PatientID = ${req.params.id}`,
+    PatientID = "${req.params.id}"`,
      function (error, results, fields) {
        if (error) throw error;
        return res.status(200).send(results);
