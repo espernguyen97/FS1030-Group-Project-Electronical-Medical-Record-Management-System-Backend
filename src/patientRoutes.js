@@ -48,20 +48,25 @@ router.get('/patients', jwtVerify, async (req, res, next) => {
 });
 //>>>3.C) route to get a specific patient when given an ID alongside a valid JWT:
 router.get('/patients/:id', jwtVerify, async (req, res, next) => {
-    try {
-        let entries = await dataHandler.getAll(PatientsDataPath);
-        let entry = entries.find(entry => entry.id == req.params.id);
-        if (entry == undefined) {
-            return res.status(404).json({message: `entry ${req.params.id} not found`});
-        };
-        return res.json(entry);
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    };
+    db.query(`SELECT * FROM patient WHERE PatientID=${req.params.id}`, function(error, results) {
+        if (error) throw error;
+        return res.status(200).send(results);
+    })
+
+    // try {
+    //     let entries = await dataHandler.getAll(PatientsDataPath);
+    //     let entry = entries.find(entry => entry.id == req.params.id);
+    //     if (entry == undefined) {
+    //         return res.status(404).json({message: `entry ${req.params.id} not found`});
+    //     };
+    //     return res.json(entry);
+    // } catch (err) {
+    //     console.error(err);
+    //     return next(err);
+    // };
 });
 //3.D) route to delete a specific patient when given an ID alongside a valid JWT:
-router.delete('patients/:id', jwtVerify, async (req, res, next) => {
+router.delete('/patients/:id', jwtVerify, async (req, res, next) => {
     try {
         let patientID = req.params.id;
         let removed = await dataHandler.removeData(PatientsDataPath, patientID);
