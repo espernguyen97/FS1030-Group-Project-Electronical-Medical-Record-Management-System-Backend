@@ -55,18 +55,12 @@ router.get('/patients/:id', jwtVerify, async (req, res, next) => {
 });
 //3.D) route to delete a specific patient when given an ID alongside a valid JWT:
 router.delete('/patients/:id', jwtVerify, async (req, res, next) => {
-    try {
-        let patientID = req.params.id;
-        let removed = await dataHandler.removeData(PatientsDataPath, patientID);
-        if (!removed){
-            return res.status(404).json({message: `entry ${patientID} not found`});
-        };
-        return res.status(204).json() // it is an empty response as this resource no longer exists
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    };
+    db.query(`DELETE FROM patient WHERE PatientID=${req.params.id}`, function (error, results) {
+        if (error) throw error
+        return res.status(200).send(results)
+    })
 });
+
 //3.E) route to update a specific patient when given an ID alongside a valid JWT:
 router.patch("/patients/:id", jwtVerify, async (req, res, next) => {
     const {DOB, OHIP, First_Name, Last_Name, Address, City, Province, PostalCode, Phone_Number, Email} = req.body
