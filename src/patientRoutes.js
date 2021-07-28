@@ -5,7 +5,6 @@ dotenv.config();
 
 //Custom module imports:
 import jwtVerify from './middleware/jwtVerify.js' ;
-import * as dataHandler from './util/dataHandler.js' ;
 
 //setup Data paths
 //Database Connection path

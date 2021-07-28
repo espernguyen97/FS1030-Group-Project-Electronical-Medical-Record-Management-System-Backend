@@ -1,19 +1,14 @@
 //Dependency imports:
 import express from 'express' ;
 import jwt from 'jsonwebtoken' ;
-import path from 'path' ;
 import dotenv from 'dotenv' ;
 dotenv.config();
-import { v4 as uuidv4 } from 'uuid'; // function uuidv4() to create a random uuid
 
 //Custom module imports:
 import jwtVerify from './middleware/jwtVerify.js' ;
-import * as dataHandler from './util/dataHandler.js' ;
 import { verifyHash, createHash } from './util/hasher.js' ;
 import { validateUser } from './middleware/validation.js' ;
 
-//setup Data paths
-const UsersDataPath = path.resolve(process.env.USER_LOCATION);
 //Database Connection path
 const db = require("./DataBase/DBconnectionPath");
 
@@ -24,19 +19,22 @@ const router = express.Router() ;
 /*(note: an admin should be logged in to create a new care provider, hence the use of jwtVerify.
 Otherwise anyone could create a new account.)*/
 router.post('/users', jwtVerify, validateUser, (req, res, next) => {
-    let password = req.body.password;
+    let password = req.body.Password;
     createHash(password).then(hash => {
-        req.body.password = hash;
-        const newUser = {
-            id: uuidv4(),
-            ...req.body
-        }; 
-        return newUser;            
+        req.body.Password = hash;
+        return req.body;            
     }).then(async (newUser) => {
+        const {Username, Email, Password, First_Name, Last_Name, Job_Position, Admin_Flag, Last_Login} = newUser;
         try {
-            await dataHandler.addData(UsersDataPath, newUser);
-            delete newUser.password;
-            return res.status(201).json(newUser);
+            db.query(
+                `INSERT INTO users (Username, Email, Password, First_Name, Last_Name, Job_Position, Admin_Flag, Last_Login) 
+                VALUES ("${Username}", "${Email}", "${Password}", "${First_Name}", "${Last_Name}", "${Job_Position}", ${Admin_Flag}, "${Last_Login}")`,
+                function (error, results, fields){
+                    if (error) throw error;
+                    delete newUser.password;
+                    return res.status(201).json(newUser);
+                }
+            );
         } catch (err) {
             console.error(err);
             return next(err);
@@ -94,7 +92,6 @@ router.get('/users', jwtVerify, async (req, res, next) => {
 // });
 //
 //Route 1.D conflicts with route 1.G so I commented it out for now. SW
-
 
 //1.E) route to delete a specific user when given an ID alongside a valid JWT:
 router.delete('/users/:id', jwtVerify, async (req, res, next) => {
