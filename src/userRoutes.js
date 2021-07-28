@@ -45,23 +45,28 @@ router.post('/users', jwtVerify, validateUser, (req, res, next) => {
 });
 //>>>1.B) route to log in a registered user to create a JWT:
 router.post('/auth', async (req, res) => {
-    let users = await dataHandler.getAll(UsersDataPath);
-    let user = users.find(user => user.email == req.body.email);
-    //In the event the email or password does not match:    
-    if (user == undefined) {
-        return res.status(401).json({message: "incorrect credentials provided"});
-    };  
-    let password = req.body.password;
-    let storedHash = user.password;
-    verifyHash(password, storedHash).then(valid => {
-        if (!valid) {
-            return res.status(401).json({message: "incorrect credentials provided"});
-        };
-        //Upon successful login: 
-        const userEmail = req.body.email;
-        const token = jwt.sign({userEmail}, process.env.JWT_SECRET, {expiresIn: "2h"});      
-        return res.json({token});
-    });
+    db.query(
+        `SELECT * FROM users WHERE Email = '${req.body.email}'`,
+        function (error, results, fields) {
+            if (error) throw error;
+            const user = results[0];
+            //In the event the email or password does not match: 
+            if (!user) {
+                return res.status(401).json({message: "incorrect credentials provided"});
+            };  
+            let password = req.body.password;
+            let storedHash = user.Password;
+            verifyHash(password, storedHash).then(valid => {
+                if (!valid) {
+                    return res.status(401).json({message: "incorrect credentials provided"});
+                };
+                //Upon successful login: 
+                const userEmail = req.body.email;
+                const token = jwt.sign({userEmail}, process.env.JWT_SECRET, {expiresIn: "2h"});      
+                return res.json({token});
+            });
+        }
+    );
 });
 //>>>1.C) route to get a listing of all users when a valid JWT is provided:
 router.get('/users', jwtVerify, async (req, res, next) => {
