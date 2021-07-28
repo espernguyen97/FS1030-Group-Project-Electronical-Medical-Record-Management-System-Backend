@@ -52,18 +52,6 @@ router.get('/patients/:id', jwtVerify, async (req, res, next) => {
         if (error) throw error;
         return res.status(200).send(results);
     })
-
-    // try {
-    //     let entries = await dataHandler.getAll(PatientsDataPath);
-    //     let entry = entries.find(entry => entry.id == req.params.id);
-    //     if (entry == undefined) {
-    //         return res.status(404).json({message: `entry ${req.params.id} not found`});
-    //     };
-    //     return res.json(entry);
-    // } catch (err) {
-    //     console.error(err);
-    //     return next(err);
-    // };
 });
 //3.D) route to delete a specific patient when given an ID alongside a valid JWT:
 router.delete('/patients/:id', jwtVerify, async (req, res, next) => {
@@ -81,17 +69,25 @@ router.delete('/patients/:id', jwtVerify, async (req, res, next) => {
 });
 //3.E) route to update a specific patient when given an ID alongside a valid JWT:
 router.patch("/patients/:id", jwtVerify, async (req, res, next) => {
-    try {
-        let patientID = req.params.id;
-        let updated = await dataHandler.updateData(PatientsDataPath, req.body, patientID);
-        if (!updated){
-            return res.status(404).json({message: `entry ${patientID} not found`});
-        };
-        return res.json(updated);
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    };
-});
+    const {DOB, OHIP, First_Name, Last_Name, Address, City, Province, PostalCode, Phone_Number, Email} = req.body
+    db.query(`UPDATE patient SET
+    DOB = "${DOB}",
+    OHIP = "${OHIP}",
+    First_Name = "${First_Name}",
+    Last_Name = "${Last_Name}",
+    Address = "${Address}",
+    City = "${City}",
+    Province = "${Province}",
+    PostalCode = "${PostalCode}",
+    Phone_Number = "${Phone_Number}",
+    Email = "${Email}" 
+    WHERE
+    PatientID = ${req.params.id}`,
+     function (error, results, fields) {
+       if (error) throw error;
+       return res.status(200).send(results);
+   });
+}); 
+
 
 export default router
