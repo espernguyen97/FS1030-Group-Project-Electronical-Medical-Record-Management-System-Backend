@@ -98,32 +98,29 @@ router.get('/users', jwtVerify, async (req, res, next) => {
 
 //1.E) route to delete a specific user when given an ID alongside a valid JWT:
 router.delete('/users/:id', jwtVerify, async (req, res, next) => {
-    try {
-        let userID = req.params.id;
-        let removed = await dataHandler.removeData(UsersDataPath, userID);
-        if (!removed){
-            return res.status(404).json({message: `entry ${userID} not found`});
-        };
-        return res.status(204).json() // it is an empty response as this resource no longer exists
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    };
+    db.query(`DELETE FROM users WHERE UserID=${req.params.id}`, function (error, results) {
+        if (error) throw error
+        return res.status(200).send(results)
+    })
 });
-//1.F) route to update a specific user when given an ID alongside a valid JWT:
-router.patch("/users/:id", jwtVerify, validateUser, async (req, res, next) => {
-    try {
-        let userID = req.params.id;
-        let updated = await dataHandler.updateData(UsersDataPath, req.body, userID);
-        if (!updated){
-            return res.status(404).json({message: `entry ${userID} not found`});
-        };
-        return res.json(updated);
-    } catch (err) {
-        console.error(err);
-        return next(err);
-    };
-});
+//1.F) route to update a specific user when given an ID alongyside a valid JWT:
+router.patch("/users/:id", jwtVerify, async (req, res, next) => {
+    const {Username, First_Name, Last_Name, Job_Position, Admin_Flag, Email} = req.body
+    db.query(`UPDATE users SET
+    Username = "${Username}",
+    First_Name = "${First_Name}",
+    Last_Name = "${Last_Name}",
+    Job_Position = "${Job_Position}",
+    Admin_Flag = "${Admin_Flag}",
+    Email = "${Email}" 
+    WHERE
+    UserID = "${req.params.id}"`,
+     function (error, results, fields) {
+       if (error) throw error;
+       return res.status(200).send(results);
+   });
+}); 
+
 //>>>1.G) route to get a specific user by their email:
 router.get('/users/:email', jwtVerify, async (req, res, next) => {
     const {email} = req.params;
