@@ -62,7 +62,7 @@ router.delete('/patients/:id', jwtVerify, async (req, res, next) => {
 
 //3.E) route to update a specific patient when given an ID alongside a valid JWT:
 router.patch("/patients/:id", jwtVerify, async (req, res, next) => {
-    const {DOB, OHIP, First_Name, Last_Name, Address, City, Province, PostalCode, Phone_Number, Email} = req.body
+    const {DOB, OHIP, First_Name, Last_Name, Address, City, Province, PostalCode, Phone_Number, Email,Date} = req.body
     db.query(`UPDATE patient SET
     DOB = "${DOB}",
     OHIP = "${OHIP}",
@@ -73,6 +73,7 @@ router.patch("/patients/:id", jwtVerify, async (req, res, next) => {
     Province = "${Province}",
     PostalCode = "${PostalCode}",
     Phone_Number = "${Phone_Number}",
+    Date = "${Last_Edit}",
     Email = "${Email}" 
     WHERE
     PatientID = "${req.params.id}"`,
