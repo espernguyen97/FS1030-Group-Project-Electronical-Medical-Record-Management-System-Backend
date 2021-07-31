@@ -58,6 +58,30 @@ router.get('/tickets/entries/:id', jwtVerify, async (req, res, next) => {
     };
 });
 
+//2.D) route to Delete a Ticket given an ID alongside a valid JWT:
+router.delete('/tickets/entries/:id', jwtVerify, async (req, res, next) => {
+    db.query(`DELETE FROM tickets WHERE TicketID=${req.params.id}`, function (error, results) {
+        if (error) throw error
+        return res.status(200).send(results)
+    })
+});
+
+//2.E) route to Delete a Ticket given an ID alongside a valid JWT:
+router.patch("/tickets/entries/:id", jwtVerify, async (req, res, next) => {
+    const {Username, content, Date, email} = req.body
+    db.query(`UPDATE tickets SET
+    Username = "${Username}",
+    content = "${content}",
+    Date = "${Date}",
+    email = "${email}" 
+    WHERE
+    TicketID = "${req.params.id}"`,
+     function (error, results, fields) {
+       if (error) throw error;
+       return res.status(200).send(results);
+   });
+}); 
+
 //4. TODO define routes for patient notes (create, read)
 
 //5. TODO define routes for patient records (create, read)
