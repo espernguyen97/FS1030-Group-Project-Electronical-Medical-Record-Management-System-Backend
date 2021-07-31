@@ -86,6 +86,4 @@ router.patch("/tickets/entries/:id", jwtVerify, async (req, res, next) => {
 
 //5. TODO define routes for patient records (create, read)
 
-//6. TODO define routes for patient revision history (create, read)
-
 export default router
