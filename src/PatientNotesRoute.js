@@ -30,7 +30,7 @@ router.post('/notes', async (req, res, next) => { //TODO add validation middlewa
 //>>>3.B) route to get a listing of all notes when a valid JWT is provided:
 router.get('/notes', jwtVerify, async (req, res, next) => {
     db.query(
-        "SELECT * FROM notes",
+        "SELECT * FROM notes ORDER BY Date DESC",
         function (error, results, fields) {
           if (error) throw error;
           return res.status(200).send(results);
