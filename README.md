@@ -28,4 +28,17 @@
    ```sh
    npm start
    ```
+
+
+### MySQL Statements
+
+| File Name | Line Number(s) | SQL Statement |
+| --------- | --------------:| ------------- |
+||||
+||||
+||||
+||||
+||||
+||||
+||||
    
