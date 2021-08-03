@@ -1,4 +1,4 @@
-const isEmpty = field => field.trim() === "" ? true : false;
+const isEmpty = field => field.toString().trim() === "" ? true : false;
 //trim() removes whitespace from both ends of a string
 
 const validateEmail = Email => {
@@ -40,17 +40,17 @@ const checkProps = (fields, obj, msg) => {
                     break;
                 case "First_Name":
                     if (isEmpty(obj.First_Name) || obj.First_Name.length > 20 || obj.First_Name.includes(" ")) {
-                            msg.push(field);
+                        msg.push(field);
                     };
                     break;
                 case "Last_Name":
                     if (isEmpty(obj.Last_Name) || obj.Last_Name.length > 20 || obj.Last_Name.includes(" ")) {
-                            msg.push(field);
+                        msg.push(field);
                     };
                     break;
                 case "Job_Position":
                     if (isEmpty(obj.Job_Position) || obj.Job_Position.length > 20 || obj.Job_Position.includes(" ")) {
-                            msg.push(field);
+                        msg.push(field);
                     };
                     break;
                 default: //for any other required field where we just need to check if it's empty
@@ -71,9 +71,9 @@ const validateUser = (req, res, next) => {
     let arr = errMsg.invalid;
     checkProps(reqFields, req.body, arr);
     if (arr.length) { 
-        return res.status(400).json(errMsg); 
+        return res.status(400).json(`Message: ${errMsg.message}. Invalid entries for: ${errMsg.invalid.join(', ')}`); 
     };    
     next();
 };
 
-export { validateUser };
+export { validateUser }; 
