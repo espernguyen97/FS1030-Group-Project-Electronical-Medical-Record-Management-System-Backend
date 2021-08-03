@@ -39,11 +39,11 @@ router.post('/patient-revisions', jwtVerify, async (req, res, next) => {
     }
 });
 
-//>>>4.B) route to get all revisions for a specific patient 
-router.get('/patient-revisions/:PatientID', async (req, res, next) => {    
+//>>>4.B) route to get all revisions for a specific patient  
+router.get('/patient-revisions/:PatientID', async (req, res, next) => {  
     try {
-        database.query(
-            `SELECT * FROM revision_history WHERE PatientID=${req.params.PatientID}`,
+        db.query(
+            `SELECT * FROM revision_history WHERE PatientID=${req.params.PatientID} ORDER BY Date DESC`,
             function (error, results) {
                 if (error) throw error;
                 return res.json(results);
