@@ -52,14 +52,14 @@ router.get('/medical_history', jwtVerify, async (req, res, next) => {
 });
 //>>>3.C) route to get a specific medical_history when given an ID alongside a valid JWT:
 router.get('/medical_history/:id', jwtVerify, async (req, res, next) => {
-    db.query(`SELECT * FROM medical_history WHERE Medical_H=${req.params.id}`, function(error, results) {
+    db.query(`SELECT * FROM medical_history WHERE PatientID=${req.params.id}`, function(error, results) {
         if (error) throw error;
         return res.status(200).send(results);
     })
 });
 //3.D) route to delete a specific medical_history when given an ID alongside a valid JWT:
 router.delete('/medical_history/:id', jwtVerify, async (req, res, next) => {
-    db.query(`DELETE FROM medical_history WHERE Medical_H=${req.params.id}`, function (error, results) {
+    db.query(`DELETE FROM medical_history WHERE PatientID=${req.params.id}`, function (error, results) {
         if (error) throw error
         return res.status(200).send(results)
     })
