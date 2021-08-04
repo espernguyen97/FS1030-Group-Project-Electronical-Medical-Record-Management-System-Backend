@@ -39,7 +39,7 @@ router.get('/notes', jwtVerify, async (req, res, next) => {
 });
 //>>>3.C) route to get a specific notes when given an ID alongside a valid JWT:
 router.get('/notes/:id', jwtVerify, async (req, res, next) => {
-    db.query(`SELECT * FROM notes WHERE noteID=${req.params.id}`, function(error, results) {
+    db.query(`SELECT * FROM notes WHERE PatientID=${req.params.id}`, function(error, results) {
         if (error) throw error;
         return res.status(200).send(results);
     })
