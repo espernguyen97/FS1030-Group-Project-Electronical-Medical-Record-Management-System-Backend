@@ -15,7 +15,7 @@ const router = express.Router() ;
 //3. Routes for medical_history
 //>>>3.A) route to create a new medical_history:
 router.post('/medical_history', async (req, res, next) => { //TODO add validation middleware
-    db.query("INSERT INTO medical_history(PatientID,Username,Date,Fever,Allergies,XrayURL,Covid_Checked,LabResults,BillStatus,Imunizations,Insurance_Provider,InsuredStatus,Smoker,Chronic_Pain,Past_Procedures,Weight,Prescriptions) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+    db.query("INSERT INTO medical_history(PatientID,Username,Date,Fever,Allergies,XrayURL,Covid_Checked,LabResults,BillStatus,Immunizations,Insurance_Provider,InsuredStatus,Smoker,Chronic_Pain,Past_Procedures,Weight,Prescriptions) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
     [   
         req.body.PatientID,
         req.body.Username,
@@ -26,7 +26,7 @@ router.post('/medical_history', async (req, res, next) => { //TODO add validatio
         req.body.Covid_Checked,
         req.body.LabResults,
         req.body.BillStatus,
-        req.body.Imunizations,
+        req.body.Immunizations,
         req.body.Insurance_Provider,
         req.body.InsuredStatus,
         req.body.Smoker,
@@ -77,7 +77,7 @@ router.patch("/medical_history/:id", jwtVerify, async (req, res, next) => {
     XrayURL = "${XrayURL}",
     Covid_Checked = "${Covid_Checked}",
     BillStatus = "${BillStatus}",
-    Imunizations = "${Imunizations}",
+    Immunizations = "${Immunizations}",
     Insurance_Provider = "${Insurance_Provider}",
     InsuredStatus = "${InsuredStatus}",
     Smoker = "${Smoker}",
