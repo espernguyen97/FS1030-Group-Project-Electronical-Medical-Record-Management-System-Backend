@@ -15,7 +15,7 @@ const router = express.Router() ;
 //3. Routes for medical_history
 //>>>3.A) route to create a new medical_history:
 router.post('/medical_history', async (req, res, next) => { //TODO add validation middleware
-    db.query("INSERT INTO medical_history(PatientID,Username,Date,Fever,Allergies,XrayURL,Covid_Checked,LabResults,Prescriptions,BillStatus,Insurance_Provider,InsuredStatus,Smoker,Chronic_Pain,Past_Procedures,Weight,Imunizations) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+    db.query("INSERT INTO medical_history(PatientID,Username,Date,Fever,Allergies,XrayURL,Covid_Checked,LabResults,Prescriptions,BillStatus,Insurance_Provider,InsuredStatus,Smoker,Chronic_Pain,Past_Procedures,Weight,Imunizations) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
     [   
         req.body.PatientID,
         req.body.Username,
