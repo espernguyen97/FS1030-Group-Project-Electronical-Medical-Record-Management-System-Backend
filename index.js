@@ -7,6 +7,7 @@ import patientRoutes from './src/patientRoutes.js'
 import patientRevisionRoutes from './src/patientRevisionRoutes.js'
 import PatientNotesRoute from './src/PatientNotesRoute.js'
 import PatientMedicalHistoryRoute from './src/PatientMedicalHistoryRoute.js'
+import PatientScheduleRoute from './src/PatientScheduleRoute.js'
 import cors from 'cors'
 
 const port = process.env.PORT || 4000
@@ -21,6 +22,7 @@ app.use('/', patientRoutes)
 app.use('/', patientRevisionRoutes)
 app.use('/', PatientNotesRoute)
 app.use('/', PatientMedicalHistoryRoute)
+app.use('/', PatientScheduleRoute)
 
 app.use((err, req, res, next) => {
     console.error(err.stack)
