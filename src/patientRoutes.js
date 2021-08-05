@@ -38,7 +38,7 @@ router.post('/patients', async (req, res, next) => { //TODO add validation middl
 //>>>3.B) route to get a listing of all patients when a valid JWT is provided:
 router.get('/patients', jwtVerify, async (req, res, next) => {
     db.query(
-        "SELECT * FROM patient",
+        "SELECT * FROM patient ORDER BY First_Name, Last_Name",
         function (error, results, fields) {
           if (error) throw error;
           return res.status(200).send(results);

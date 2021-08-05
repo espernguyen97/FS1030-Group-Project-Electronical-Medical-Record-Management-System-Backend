@@ -76,7 +76,7 @@ router.post('/auth', async (req, res) => {
 //>>>1.C) route to get a listing of all users when a valid JWT is provided:
 router.get('/users', jwtVerify, async (req, res, next) => {
     db.query(
-        "SELECT * FROM users",
+        "SELECT * FROM users ORDER BY First_Name, Last_Name",
         function (error, results, fields) {
           if (error) throw error;
           return res.status(200).send(results);
