@@ -83,5 +83,15 @@ router.patch("/patients/:id", jwtVerify, async (req, res, next) => {
    });
 }); 
 
+router.get('/search', jwtVerify, async (req, res, next) => {
+    db.query(
+        `SELECT * FROM patient WHERE First_Name LIKE "%`+req.query.key+`%" OR Last_Name LIKE "%`+req.query.key+`%"`,
+        function (error, results, fields) {
+          if (error) throw error;
+          return res.status(200).send(results);
+        }
+      );
+});
+
 
 export default router
