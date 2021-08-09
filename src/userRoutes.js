@@ -7,7 +7,7 @@ dotenv.config();
 //Custom module imports:
 import jwtVerify from './middleware/jwtVerify.js' ;
 import { verifyHash, createHash } from './util/hasher.js' ;
-import { validateUser } from './middleware/validation.js' ;
+import { validateUser, validateUserEdit } from './middleware/validation.js' ;
 
 //Database Connection path
 const db = require("./DataBase/DBconnectionPath");
@@ -110,22 +110,45 @@ router.delete('/users/:id', jwtVerify, async (req, res, next) => {
         return res.status(200).send(results)
     })
 });
-//1.F) route to update a specific user when given an ID alongyside a valid JWT:
-router.patch("/users/:id", jwtVerify, async (req, res, next) => {
-    const {Username, First_Name, Last_Name, Job_Position, Admin_Flag, Email} = req.body
-    db.query(`UPDATE users SET
-    Username = "${Username}",
-    First_Name = "${First_Name}",
-    Last_Name = "${Last_Name}",
-    Job_Position = "${Job_Position}",
-    Admin_Flag = "${Admin_Flag}",
-    Email = "${Email}" 
-    WHERE
-    UserID = "${req.params.id}"`,
-     function (error, results, fields) {
-       if (error) throw error;
-       return res.status(200).send(results);
-   });
+//1.F) route to update a specific user when given an ID along side a valid JWT:
+router.patch("/users/:id", jwtVerify, validateUserEdit, async (req, res, next) => {
+    //Note: in users table in database the Email and Username fields must be unique
+    db.query(`SELECT * FROM users WHERE UserID = "${req.params.id}"`, //get the previous data for this user
+        function (error, results, fields){
+            const prevData = results[0];
+            db.query(`SELECT Email FROM users WHERE Email = "${req.body.Email}"`, //check if new email is already in use by another user
+            function (error, results, fields){          
+                if (results.length && prevData.Email !== req.body.Email){ 
+                    return res.status(400).json('Error: an account with this email address already exists.');
+                }
+                let sameEmail = prevData.Email === req.body.Email;
+                db.query(`SELECT Username FROM users WHERE Username = "${req.body.Username}"`, //check if new username is already in use by another user
+                    function (error, results, fields){          
+                        if (results.length && prevData.Username !== req.body.Username){
+                            return res.status(400).json('Error: an account with this username already exists.');
+                        }
+                        let sameUsername = prevData.Username === req.body.Username;
+                        const {Username, First_Name, Last_Name, Job_Position, Admin_Flag, Email} = req.body
+                        let nextQuery;
+                        if (sameEmail && sameUsername){ //Case 1: email and username remain unchanged
+                            nextQuery = `UPDATE users SET First_Name = "${First_Name}", Last_Name = "${Last_Name}", Job_Position = "${Job_Position}", Admin_Flag = "${Admin_Flag}" WHERE UserID = "${req.params.id}"`;
+                        }
+                        if (sameEmail && !sameUsername){ //Case 2: username is changed while email remains unchanged
+                            nextQuery = `UPDATE users SET Username = "${Username}", First_Name = "${First_Name}", Last_Name = "${Last_Name}", Job_Position = "${Job_Position}", Admin_Flag = "${Admin_Flag}" WHERE UserID = "${req.params.id}"`;
+                        }
+                        if (!sameEmail && sameUsername){ //Case 3: email is changed while username remains unchanged
+                            nextQuery = `UPDATE users SET First_Name = "${First_Name}", Last_Name = "${Last_Name}", Job_Position = "${Job_Position}", Admin_Flag = "${Admin_Flag}", Email = "${Email}" WHERE UserID = "${req.params.id}"`;
+                        }
+                        if (!sameEmail && !sameUsername){ //Case 4: both email and username are changed
+                            nextQuery = `UPDATE users SET Username = "${Username}", First_Name = "${First_Name}", Last_Name = "${Last_Name}", Job_Position = "${Job_Position}", Admin_Flag = "${Admin_Flag}", Email = "${Email}" WHERE UserID = "${req.params.id}"`;
+                        }
+                        db.query(nextQuery, function (error, results, fields) {
+                            if (error) throw error;
+                            return res.status(200).send(results);
+                        });
+                    });
+            });       
+    });      
 }); 
 
 //>>>1.G) route to get a specific user by their email:

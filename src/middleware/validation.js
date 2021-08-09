@@ -48,11 +48,6 @@ const checkProps = (fields, obj, msg) => {
                         msg.push(field);
                     };
                     break;
-                case "Job_Position":
-                    if (isEmpty(obj.Job_Position) || obj.Job_Position.length > 20 || obj.Job_Position.includes(" ")) {
-                        msg.push(field);
-                    };
-                    break;
                 case "Age":
                     if (!isEmpty(obj.Age) && (parseInt(obj.Age) === NaN || parseInt(obj.Age) < 0 || parseInt(obj.Age) > 150)) { 
                         msg.push(field);
@@ -70,13 +65,23 @@ const checkProps = (fields, obj, msg) => {
 validation function for each form to define what the required fields are and customize the error message. SW*/
 
 const validateUser = (req, res, next) => {
-    let reqFields = ["First_Name", "Last_Name", "Job_Position", "Email", "Username", "Password"];
+    let reqFields = ["Username", "First_Name", "Last_Name", "Email", "Job_Position", "Password"];
     let errMsg = {message: "validation error",
                 invalid: []};
     let arr = errMsg.invalid;
     checkProps(reqFields, req.body, arr);
     if (arr.length) { 
         return res.status(400).json(`Message: ${errMsg.message}. Invalid entries for: ${errMsg.invalid.join(', ')}`); 
+    };    
+    next();
+};
+
+const validateUserEdit = (req, res, next) => {
+    let reqFields = ["Username", "First_Name", "Last_Name", "Email", "Job_Position"];
+    let errMsg = [];
+    checkProps(reqFields, req.body, errMsg);
+    if (errMsg.length) { 
+        return res.status(400).json(`Message: validation error. Invalid entries for: ${errMsg.join(', ')}`); 
     };    
     next();
 };
@@ -101,4 +106,4 @@ const validatePatientEdit = (req, res, next) => {
     next();
 };
 
-export { validateUser, validatePatient, validatePatientEdit }; 
+export { validateUser, validatePatient, validatePatientEdit, validateUserEdit }; 
