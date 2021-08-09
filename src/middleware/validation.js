@@ -28,8 +28,8 @@ const checkProps = (fields, obj, msg) => {
                         msg.push(field);
                     };
                     break; 
-                case "phoneNumber":
-                    if (isEmpty(obj.phoneNumber) || !obj.phoneNumber.match(/^[0-9]{10}$/)) {
+                case "Phone_Number":
+                    if (isEmpty(obj.Phone_Number) || !obj.Phone_Number.match(/^[0-9]{10}$/)) {
                         msg.push(field);
                     };
                     break;
@@ -50,6 +50,11 @@ const checkProps = (fields, obj, msg) => {
                     break;
                 case "Job_Position":
                     if (isEmpty(obj.Job_Position) || obj.Job_Position.length > 20 || obj.Job_Position.includes(" ")) {
+                        msg.push(field);
+                    };
+                    break;
+                case "Age":
+                    if (!isEmpty(obj.Age) && (parseInt(obj.Age) === NaN || parseInt(obj.Age) < 0 || parseInt(obj.Age) > 150)) { 
                         msg.push(field);
                     };
                     break;
@@ -76,4 +81,24 @@ const validateUser = (req, res, next) => {
     next();
 };
 
-export { validateUser }; 
+const validatePatient = (req, res, next) => {
+    let reqFields = ["First_Name", "Last_Name", "DOB", "OHIP", "Address", "City", "Province", "PostalCode", "Phone_Number", "Email", "Age"];
+    let errMsg = [];
+    checkProps(reqFields, req.body, errMsg);
+    if (errMsg.length){
+        return res.status(400).json(`Message: validation error. Invalid entries for ${errMsg.join(', ')}`);
+    }
+    next();
+};
+
+const validatePatientEdit = (req, res, next) => {
+    let reqFields = ["First_Name", "Last_Name", "DOB", "OHIP", "Address", "City", "Province", "PostalCode", "Phone_Number", "Email"];
+    let errMsg = [];
+    checkProps(reqFields, req.body, errMsg);
+    if (errMsg.length){
+        return res.status(400).json(`Message: validation error. Invalid entries for ${errMsg.join(', ')}`);
+    }
+    next();
+};
+
+export { validateUser, validatePatient, validatePatientEdit }; 

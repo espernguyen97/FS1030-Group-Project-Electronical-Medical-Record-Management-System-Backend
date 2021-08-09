@@ -5,6 +5,7 @@ dotenv.config();
 
 //Custom module imports:
 import jwtVerify from './middleware/jwtVerify.js' ;
+import { validatePatient, validatePatientEdit } from './middleware/validation.js';
 
 //setup Data paths
 //Database Connection path
@@ -14,7 +15,7 @@ const router = express.Router() ;
 
 //3. Routes for patients
 //>>>3.A) route to create a new patient:
-router.post('/patients', async (req, res, next) => { //TODO add validation middleware
+router.post('/patients', jwtVerify, validatePatient, async (req, res, next) => {
     db.query("INSERT INTO patient(DOB,OHIP,First_Name,Last_Name,Address,City,Province,PostalCode,Phone_Number,Email,Age,Last_edit) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?)",
     [   
         req.body.DOB,
@@ -59,9 +60,8 @@ router.delete('/patients/:id', jwtVerify, async (req, res, next) => {
         return res.status(200).send(results)
     })
 });
-
 //3.E) route to update a specific patient when given an ID alongside a valid JWT:
-router.patch("/patients/:id", jwtVerify, async (req, res, next) => {
+router.patch("/patients/:id", jwtVerify, validatePatientEdit, async (req, res, next) => {
     const {DOB, OHIP, First_Name, Last_Name, Address, City, Province, PostalCode, Phone_Number, Email,Last_Edit} = req.body
     db.query(`UPDATE patient SET
     DOB = "${DOB}",
