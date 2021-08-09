@@ -149,4 +149,15 @@ router.get('/users/:email', jwtVerify, async (req, res, next) => {
     };
 });
 
+
+router.get('/usersearch', jwtVerify, async (req, res, next) => {
+    db.query(
+        `SELECT * FROM users WHERE First_Name LIKE "%`+req.query.key+`%" OR Last_Name LIKE "%`+req.query.key+`%" OR Username LIKE "%`+req.query.key+`%"`,
+        function (error, results, fields) {
+          if (error) throw error;
+          return res.status(200).send(results);
+        }
+      );
+});
+
 export default router
