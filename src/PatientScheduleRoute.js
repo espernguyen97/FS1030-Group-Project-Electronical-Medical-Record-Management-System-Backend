@@ -69,4 +69,15 @@ router.patch("/schedule/:id", jwtVerify, async (req, res, next) => {
 }); 
 
 
+
+router.get('/appointmentSearch', jwtVerify, async (req, res, next) => {
+    db.query(
+        `SELECT * FROM schedule WHERE Username LIKE "%`+req.query.key+`%" OR Date LIKE "%`+req.query.key+`%" OR Timeslot LIKE "%`+req.query.key+`%"`,
+        function (error, results, fields) {
+          if (error) throw error;
+          return res.status(200).send(results);
+        }
+      );
+});
+
 export default router
