@@ -68,12 +68,14 @@ router.delete('/tickets/entries/:id', jwtVerify, async (req, res, next) => {
 
 //2.E) route to Delete a Ticket given an ID alongside a valid JWT:
 router.patch("/tickets/entries/:id", jwtVerify, async (req, res, next) => {
-    const {Username, content, Date, email} = req.body
+    const {Username, content, Date,Completed, Notes, email} = req.body
     db.query(`UPDATE tickets SET
     Username = "${Username}",
     content = "${content}",
     Date = "${Date}",
-    email = "${email}" 
+    email = "${email}",
+    Completed = "${Completed}",
+    Notes = "${Notes}"
     WHERE
     TicketID = "${req.params.id}"`,
      function (error, results, fields) {
@@ -82,8 +84,5 @@ router.patch("/tickets/entries/:id", jwtVerify, async (req, res, next) => {
    });
 }); 
 
-//4. TODO define routes for patient notes (create, read)
-
-//5. TODO define routes for patient records (create, read)
 
 export default router
