@@ -24,29 +24,34 @@ router.post('/users', jwtVerify, validateUser, (req, res, next) => {
             if (results.length){
                 return res.status(400).json('Error: an account with this email address already exists.');
             };
-            let password = req.body.Password; 
-            createHash(password).then(hash => {
-                req.body.Password = hash;
-                return req.body;            
-            }).then(async (newUser) => {
-                const {Username, Email, Password, First_Name, Last_Name, Job_Position, Admin_Flag, Last_Login} = newUser;
-                try {
-                    db.query(
-                        `INSERT INTO users (Username, Email, Password, First_Name, Last_Name, Job_Position, Admin_Flag, Last_Login) 
-                        VALUES ("${Username}", "${Email}", "${Password}", "${First_Name}", "${Last_Name}", "${Job_Position}", ${Admin_Flag}, "${Last_Login}")`,
-                        function (error, results, fields){
-                            if (error) throw error;
-                            delete newUser.password;
-                            return res.status(201).json(newUser);
-                        }
-                    );
-                } catch (err) {
-                    console.error(err);
-                    return next(err);
-                };
-            });    
-        }
-    );
+            db.query(`SELECT Username FROM users WHERE Username = "${req.body.Username}"`, 
+                function (error, results, fields){          
+                    if (results.length){
+                        return res.status(400).json('Error: an account with this username already exists.');
+                    }
+                    let password = req.body.Password; 
+                    createHash(password).then(hash => {
+                        req.body.Password = hash;
+                        return req.body;            
+                    }).then(async (newUser) => {
+                        const {Username, Email, Password, First_Name, Last_Name, Job_Position, Admin_Flag, Last_Login} = newUser;
+                        try {
+                            db.query(
+                                `INSERT INTO users (Username, Email, Password, First_Name, Last_Name, Job_Position, Admin_Flag, Last_Login) 
+                                VALUES ("${Username}", "${Email}", "${Password}", "${First_Name}", "${Last_Name}", "${Job_Position}", ${Admin_Flag}, "${Last_Login}")`,
+                                function (error, results, fields){
+                                    if (error) throw error;
+                                    delete newUser.password;
+                                    return res.status(201).json(newUser);
+                                }
+                            );
+                        } catch (err) {
+                            console.error(err);
+                            return next(err);
+                        };
+                    }); 
+            });   
+    });
 });
 //>>>1.B) route to log in a registered user to create a JWT:
 router.post('/auth', async (req, res) => {
