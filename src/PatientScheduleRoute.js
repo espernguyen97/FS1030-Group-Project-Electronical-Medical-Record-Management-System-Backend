@@ -37,9 +37,10 @@ router.get('/schedule', jwtVerify, async (req, res, next) => {
         }
       );
 });
-//>>>3.C) route to get a specific schedule when given an ID alongside a valid JWT:
+//>>>3.C) route to get the schedule for a specific patient when given a patient ID alongside a valid JWT:
 router.get('/schedule/:id', jwtVerify, async (req, res, next) => {
-    db.query(`SELECT * FROM schedule WHERE PatientID=${req.params.id}`, function(error, results) {
+    db.query(`SELECT * FROM schedule WHERE PatientID=${req.params.id} ORDER BY STR_TO_DATE( Date, '%Y-%m-%d' ) DESC, Timeslot DESC`, 
+    function(error, results) {
         if (error) throw error;
         return res.status(200).send(results);
     })
