@@ -21,12 +21,13 @@ section of routes (ex: usersRoutes.js, patientsRoutes.js, etc.) SW*/
 //2. Routes for tickets
 //>>>2.A) route to create a new ticket:
 router.post('/tickets/entries', async (req, res, next) => {
-    db.query("INSERT INTO tickets(Username,email,Date,content) VALUES ( ?,?,?,?)",
+    db.query("INSERT INTO tickets(Username,email,Date,content,TicketNumber) VALUES ( ?,?,?,?,?)",
     [   
         req.body.Username,
         req.body.email,
         req.body.Date,
-        req.body.content
+        req.body.content,
+        req.body.TicketNumber
     ],
      function (error, results, fields) {
        if (error) throw error;
@@ -68,14 +69,15 @@ router.delete('/tickets/entries/:id', jwtVerify, async (req, res, next) => {
 
 //2.E) route to Delete a Ticket given an ID alongside a valid JWT:
 router.patch("/tickets/entries/:id", jwtVerify, async (req, res, next) => {
-    const {Username, content, Date,Completed, Notes, email} = req.body
+    const {Username, content, Date,Completed, Notes, email, Ticket} = req.body
     db.query(`UPDATE tickets SET
     Username = "${Username}",
     content = "${content}",
     Date = "${Date}",
     email = "${email}",
     Completed = "${Completed}",
-    Notes = "${Notes}"
+    Notes = "${Notes}",
+    TicketNumber = "${TicketNumber}"
     WHERE
     TicketID = "${req.params.id}"`,
      function (error, results, fields) {
@@ -83,6 +85,5 @@ router.patch("/tickets/entries/:id", jwtVerify, async (req, res, next) => {
        return res.status(200).send(results);
    });
 }); 
-
 
 export default router
