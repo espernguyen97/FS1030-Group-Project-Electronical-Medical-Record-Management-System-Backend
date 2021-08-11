@@ -1,7 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
-import routes from './src/routes.js'
+import ticketRoutes from './src/ticketRoutes.js'
 import userRoutes from './src/userRoutes.js'
 import patientRoutes from './src/patientRoutes.js'
 import patientRevisionRoutes from './src/patientRevisionRoutes.js'
@@ -16,7 +16,7 @@ app.use(cors())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
-app.use('/', routes)
+app.use('/', ticketRoutes)
 app.use('/', userRoutes)
 app.use('/', patientRoutes)
 app.use('/', patientRevisionRoutes)

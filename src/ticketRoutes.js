@@ -1,6 +1,5 @@
 //Dependency imports:
 import express from 'express' ;
-import jwt from 'jsonwebtoken' ;
 import dotenv from 'dotenv' ;
 dotenv.config();
 
@@ -13,10 +12,6 @@ import * as dataHandler from './util/dataHandler.js' ;
 const db = require("./DataBase/DBconnectionPath");
 
 const router = express.Router() ;
-
-/*TODO: As this file gets bigger we can split it into separate js files for each
-section of routes (ex: usersRoutes.js, patientsRoutes.js, etc.) SW*/
-
 
 //2. Routes for tickets
 //>>>2.A) route to create a new ticket:
@@ -67,7 +62,7 @@ router.delete('/tickets/entries/:id', jwtVerify, async (req, res, next) => {
     })
 });
 
-//2.E) route to Delete a Ticket given an ID alongside a valid JWT:
+//2.E) route to update a Ticket given an ID alongside a valid JWT:
 router.patch("/tickets/entries/:id", jwtVerify, async (req, res, next) => {
     const {Username, content, Date,Completed, Notes, email, Ticket} = req.body
     db.query(`UPDATE tickets SET
