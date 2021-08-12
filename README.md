@@ -40,11 +40,11 @@
 
 | File Name | Line Number(s) | SQL Statement |
 | --------- | --------------:| ------------- |
-|PatientMedicalHistoryRoute|18|INSERT INTO medical_history(PatientID,Username,Date,Fever,Allergies,XrayURL,Covid_Checked,LabResults,BillStatus,Immunizations,Insurance_Provider,InsuredStatus,Smoker,Chronic_Pain,Past_Procedures,Weight,Prescriptions) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)|
-|PatientMedicalHistoryRoute|46|SELECT * FROM medical_history ORDER BY Date DESC|
-|PatientMedicalHistoryRoute|55|SELECT * FROM medical_history WHERE PatientID=${req.params.id}|
-|PatientMedicalHistoryRoute|62|DELETE FROM medical_history WHERE PatientID=${req.params.id}|
-|PatientMedicalHistoryRoute|71|UPDATE medical_history SET PatientID = "${PatientID}", Username = "${Username}", Date = "${Date}", Fever = "${Fever}", Allergies = "${Allergies}", XrayURL = "${XrayURL}", Covid_Checked = "${Covid_Checked}", BillStatus = "${BillStatus}", Immunizations = "${Immunizations}", Insurance_Provider = "${Insurance_Provider}", InsuredStatus = "${InsuredStatus}", Smoker = "${Smoker}", Chronic_Pain = "${Chronic_Pain}", Past_Procedures = "${Past_Procedures}", Weight = "${Weight}", LabResults = "${LabResults}", Prescriptions = "${Prescriptions}", WHERE Medical_H = "${req.params.id}"|
+|PatientMedicalHistoryRoute,js|18|INSERT INTO medical_history(PatientID,Username,Date,Fever,Allergies,XrayURL,Covid_Checked,LabResults,BillStatus,Immunizations,Insurance_Provider,InsuredStatus,Smoker,Chronic_Pain,Past_Procedures,Weight,Prescriptions) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)|
+|PatientMedicalHistoryRoute.js|46|SELECT * FROM medical_history ORDER BY Date DESC|
+|PatientMedicalHistoryRoute.js|55|SELECT * FROM medical_history WHERE PatientID=${req.params.id}|
+|PatientMedicalHistoryRoute.js|62|DELETE FROM medical_history WHERE PatientID=${req.params.id}|
+|PatientMedicalHistoryRoute.js|71|UPDATE medical_history SET PatientID = "${PatientID}", Username = "${Username}", Date = "${Date}", Fever = "${Fever}", Allergies = "${Allergies}", XrayURL = "${XrayURL}", Covid_Checked = "${Covid_Checked}", BillStatus = "${BillStatus}", Immunizations = "${Immunizations}", Insurance_Provider = "${Insurance_Provider}", InsuredStatus = "${InsuredStatus}", Smoker = "${Smoker}", Chronic_Pain = "${Chronic_Pain}", Past_Procedures = "${Past_Procedures}", Weight = "${Weight}", LabResults = "${LabResults}", Prescriptions = "${Prescriptions}", WHERE Medical_H = "${req.params.id}"|
 |PatientNotesRoute.js|18|INSERT INTO notes(PatientID,Username,Date,Note) VALUES ( ?,?,?,?)|
 |PatientNotesRoute.js|33|SELECT * FROM notes ORDER BY Date DESC|
 |PatientNotesRoute.js|42|SELECT * FROM notes WHERE PatientID=${req.params.id}|
@@ -68,6 +68,7 @@
 |ticketRoutes.js|35|SELECT * FROM tickets|
 |ticketRoutes.js|59|DELETE FROM tickets WHERE TicketID=${req.params.id}|
 |ticketRoutes.js|68|UPDATE tickets SET Username = "${Username}", content = "${content}", Date = "${Date}", email = "${email}", Completed = "${Completed}", Notes = "${Notes}", TicketNumber = "${TicketNumber}" WHERE TicketID = "${req.params.id}"|
+|ticketRoutes.js|87|SELECT * FROM tickets WHERE TicketNumber LIKE "%`+req.query.key+`%" OR Username LIKE "%`+req.query.key+`%" OR email LIKE "%`+req.query.key+`%"|
 |userRoutes.js|22|SELECT Email FROM users WHERE Email = "${req.body.Email}"|
 |userRoutes.js|27|SELECT Username FROM users WHERE Username = "${req.body.Username}"|
 |userRoutes.js|40|INSERT INTO users (Username, Email, Password, First_Name, Last_Name, Job_Position, Admin_Flag, Last_Login) VALUES ("${Username}", "${Email}", "${Password}", "${First_Name}", "${Last_Name}", "${Job_Position}", ${Admin_Flag}, "${Last_Login}")|

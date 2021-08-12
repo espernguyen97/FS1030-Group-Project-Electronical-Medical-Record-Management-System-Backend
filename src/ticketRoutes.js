@@ -81,4 +81,16 @@ router.patch("/tickets/entries/:id", jwtVerify, async (req, res, next) => {
    });
 }); 
 
+
+router.get('/ticketsearch', jwtVerify, async (req, res, next) => {
+    db.query(
+        `SELECT * FROM tickets WHERE TicketNumber LIKE "%`+req.query.key+`%" OR Username LIKE "%`+req.query.key+`%" OR email LIKE "%`+req.query.key+`%"`,
+        function (error, results, fields) {
+          if (error) throw error;
+          return res.status(200).send(results);
+        }
+      );
+});
+
+
 export default router
